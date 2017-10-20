@@ -81,7 +81,10 @@ public class PatternManager : MonoBehaviour {
         {
             for (int i = 0; i < mainPattern.Count; i++)
             {
-                Debug.LogFormat("Player {0} touched color {1} at {2} seconds", mainPattern[i].dude.Name, mainPattern[i].ColorTouched, mainPattern[i].InstantTouched);
+                Debug.LogFormat("Player {0} touched color {1} at {2} seconds",
+                                mainPattern[i].dude.Name,
+                                mainPattern[i].ColorTouched,
+                                mainPattern[i].InstantTouched);
             }
         }
         if (showMe.Contains("last"))
@@ -105,17 +108,19 @@ public class PatternManager : MonoBehaviour {
     {
         if (justLast)
         {
-            return string.Concat("Player {0} touched color {1} at {2} seconds",
-                mainPattern[mainPattern.Count - 1].dude.Name,
-                mainPattern[mainPattern.Count - 1].ColorTouched,
-                mainPattern[mainPattern.Count - 1].InstantTouched);
+            return string.Concat(
+                "Player", mainPattern[mainPattern.Count - 1].dude.Name,
+                " touched color ", mainPattern[mainPattern.Count - 1].ColorTouched,
+                " at ", mainPattern[mainPattern.Count - 1].InstantTouched),
+                " seconds.";
         }
         else
         {
-            return string.Concat("Player {0} touched color {1} at {2} seconds",
-                   mainPattern[index].dude.Name,
-                   mainPattern[index].ColorTouched,
-                   mainPattern[index].InstantTouched);
+            return string.Concat(
+                "Player", mainPattern[index].dude.Name,
+                " touched color ", mainPattern[index].ColorTouched,
+                " at ", mainPattern[index].InstantTouched),
+                " seconds.";
         }     
     }
 }
