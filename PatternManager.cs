@@ -6,9 +6,8 @@ using UnityEngine.UI;
 public class PatternManager : MonoBehaviour {
 
     //declaring the TimeManager script.
-    public GameObject timer;
-    public TimeManager TMPatternManager;
-    public TextUpdater TUPatternManager;
+    public TimeManager PMTimeManager;
+    public TextUpdater PMTextUpdater;
 
     //The following list will hold the touches made by the players
     public List<PlayerTouch> mainPattern;
@@ -19,8 +18,8 @@ public class PatternManager : MonoBehaviour {
     void Start()
     {
         //instantiating a TimeManager object as tM to access to getTimeStamp()
-        TMPatternManager = timer.GetComponent<TimeManager>();
-        TUPatternManager = this.GetComponent<TextUpdater>();
+        PMTimeManager = GameObject.Find("Canvas").GetComponent<TimeManager>();
+        PMTextUpdater = this.GetComponent<TextUpdater>();
 
         //initializing the mainPattern list
         mainPattern = new List<PlayerTouch>();
@@ -64,7 +63,7 @@ public class PatternManager : MonoBehaviour {
 
     public void addTouch(string colorTouched,Player player = null)
     {
-        PlayerTouch lastTouch = new PlayerTouch(me, TMPatternManager.GetTimeStamp(), colorTouched);
+        PlayerTouch lastTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
         mainPattern.Add(lastTouch);
         printMainPattern("last");
     }
@@ -101,15 +100,22 @@ public class PatternManager : MonoBehaviour {
                 mainPattern[index].dude.Name,
                 mainPattern[index].ColorTouched,
                 mainPattern[index].InstantTouched);
-    }
-    public string stringedMainPattern(int index)
+    }//overloaded to accept int for specific index selection
+    public string stringedMainPattern(int index = 0,bool justLast = false)
     {
-        return string.Concat("Player {0} touched color {1} at {2} seconds",
-               mainPattern[index].dude.Name,
-               mainPattern[index].ColorTouched,
-               mainPattern[index].InstantTouched);
-               
-               
-               
+        if (justLast)
+        {
+            return string.Concat("Player {0} touched color {1} at {2} seconds",
+                mainPattern[mainPattern.Count - 1].dude.Name,
+                mainPattern[mainPattern.Count - 1].ColorTouched,
+                mainPattern[mainPattern.Count - 1].InstantTouched);
+        }
+        else
+        {
+            return string.Concat("Player {0} touched color {1} at {2} seconds",
+                   mainPattern[index].dude.Name,
+                   mainPattern[index].ColorTouched,
+                   mainPattern[index].InstantTouched);
+        }     
     }
 }

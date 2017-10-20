@@ -7,9 +7,7 @@ using TMPro;
 
 public class TextUpdater : MonoBehaviour {
 
-    public GameObject player1GO, player2GO;
     private TextMeshProUGUI player1Text, player2Text;
-    public GameObject TextTimerGO;
     private TextMeshProUGUI textTimer;
 
     TimeManager TUTimeManager;
@@ -18,9 +16,10 @@ public class TextUpdater : MonoBehaviour {
 	void Start ()
     {
         player1Text = GameObject.Find("Player1TextBody").GetComponent<TextMeshProUGUI>();
-        player2Text = player2GO.GetComponent<TextMeshProUGUI>();
-        textTimer = TextTimerGO.GetComponent<TextMeshProUGUI>();
+        player2Text = GameObject.Find("Player2TextBody").GetComponent<TextMeshProUGUI>();
+        textTimer = GameObject.Find("TimerText").GetComponent<TextMeshProUGUI>();
 
+        TUTimeManager = this.GetComponent<TimeManager>();
         TUPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
 	}
 	

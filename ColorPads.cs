@@ -1,43 +1,36 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class ColorPads : MonoBehaviour {
 
-    public Color defaultColor;
-    public Color fancyColor;
-
+    public Color defaultColor, fancyColor;
     private Renderer shad;
     public float colorSpeed = 60f;
     private float lerp;
 
-    //declaring access to TimeManager
-    //public GameObject timerText;
-    //private TimeManager tM;
-
-    //declaring the access to PatternManager
-    public GameObject patternGO;
-    private PatternManager PMColorPads;
+    //declaring the access to PatternManager and TextUpdater
+    private PatternManager CPPatternManager;
+    private TextUpdater CPTextUpdater;
 
     void Start()
     { 
         shad = GetComponent<Renderer>();
         lerp = Time.deltaTime * colorSpeed;
 
-        //timerText = new GameObject();
-        //tM = GameObject.Find("TimerText").GetComponent<TimeManager>();
-        patternGO = new GameObject();
-        PMColorPads = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
+        CPPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
+        CPTextUpdater = GameObject.Find("Canvas").GetComponent<TextUpdater>();
     }
 
     void TouchDown()
     {
-        PMColorPads.addTouch(this.gameObject.name, PMColorPads.me);
+        CPPatternManager.addTouch(this.gameObject.name, CPPatternManager.me);
     }
     void TouchEnded()
     {
         StartCoroutine(ColorReset());
+        CPTextUpdater.PrintToPlayer(CPPatternManager.stringedMainPattern(0,true));
         //PMColorPads.TUPatternManager.UpdateText();
     }
     void TouchStay()
