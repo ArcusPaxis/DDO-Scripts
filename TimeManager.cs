@@ -7,10 +7,10 @@ using TMPro;
 
 public class TimeManager : MonoBehaviour
 {
-
-    public float timerSpeed = 3;
-    private float elapsedTime;
-
+    private float absoluteTime;
+    private float playingTurn;
+    private float midTurn;
+    
     void Start()
     {
         
@@ -18,11 +18,20 @@ public class TimeManager : MonoBehaviour
 
     void Update()
     {
-        elapsedTime += Time.deltaTime;
+        absoluteTime += Time.deltaTime;
     }
 
     public float GetTimeStamp()
     {
-        return elapsedTime;
+        return absoluteTime;
+    }
+    private class RhythmManager //Lets try to keep this class here instead of having a new script
+    {
+        private float beat;
+        private int bpm;
+        public void Beat()
+        {
+    
+        }
     }
 }
