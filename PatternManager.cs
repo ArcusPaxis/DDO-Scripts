@@ -25,7 +25,7 @@ public class PatternManager : MonoBehaviour {
         mainPattern = new List<PlayerTouch>();
 
         //instantiating the temporary player
-        me = new Player(1, "André", 2);
+        me = new Player(1, "Andre'", 2);
     }
 
     //The playerTouch class stores touches made by the players and
@@ -109,18 +109,18 @@ public class PatternManager : MonoBehaviour {
         if (justLast)
         {
             return string.Concat(
-                "Player", mainPattern[mainPattern.Count - 1].dude.Name,
+                "Player ", mainPattern[mainPattern.Count - 1].dude.Name,
                 " touched color ", mainPattern[mainPattern.Count - 1].ColorTouched,
-                " at ", mainPattern[mainPattern.Count - 1].InstantTouched),
-                " seconds.";
+                " at ", mainPattern[mainPattern.Count - 1].InstantTouched.ToString("0.0"),
+                " seconds.");
         }
         else
         {
             return string.Concat(
-                "Player", mainPattern[index].dude.Name,
+                "Player ", mainPattern[index].dude.Name,
                 " touched color ", mainPattern[index].ColorTouched,
-                " at ", mainPattern[index].InstantTouched),
-                " seconds.";
+                " at ", mainPattern[index].InstantTouched,
+                " seconds.");
         }     
     }
 }
