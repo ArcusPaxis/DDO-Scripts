@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour
 {
     private float absoluteTime;
     private float playingTurn;
-    private float midTurn;
+    private float betweenTurns;
     
     void Start()
     {
