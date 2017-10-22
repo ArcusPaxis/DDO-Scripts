@@ -1,20 +1,12 @@
-﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class TimeManager : MonoBehaviour
 {
     private float absoluteTime;
     private float playingTurn;
     private float betweenTurns;
-    
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
@@ -25,13 +17,13 @@ public class TimeManager : MonoBehaviour
     {
         return absoluteTime;
     }
-    private class RhythmManager //Lets try to keep this class here instead of having a new script
+    private class Rhythm //Lets try to keep this class here instead of having a new script
     {
         private float beat;
         private int bpm;
         public void Beat()
         {
-    
+            
         }
     }
 }
