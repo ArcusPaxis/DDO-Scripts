@@ -10,7 +10,21 @@ public class ETouch : MonoBehaviour {
     private GameObject[] touchesOld;
     private RaycastHit hit;
 
-	void Update () {
+    private PatternManager ETPatternManager;
+    private TurnDirector ETTurnDirector;
+
+    void Start()
+    {
+        ETPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
+        ETTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
+    }
+
+    void Update ()
+    {
+        Touching();
+	}
+    private void Touching()
+    {
         if (Input.touchCount > 0)
         {
             touchesOld = new GameObject[touchList.Count];
@@ -49,5 +63,5 @@ public class ETouch : MonoBehaviour {
                 }
             }
         }
-	}
+    }
 }

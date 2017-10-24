@@ -12,7 +12,8 @@ public class ColorPads : MonoBehaviour {
 
     //declaring the access to PatternManager and TextUpdater
     private PatternManager CPPatternManager;
-    private TextUpdater CPTextUpdater;
+    private TextManager CPTextManager;
+    TurnDirector CPTurnDirector;
 
     void Start()
     { 
@@ -20,46 +21,51 @@ public class ColorPads : MonoBehaviour {
         lerp = Time.deltaTime * colorSpeed;
 
         CPPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
-        CPTextUpdater = GameObject.Find("Canvas").GetComponent<TextUpdater>();
+        CPTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();
+        CPTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
     }
 
     void TouchDown()
     {
-        CPPatternManager.addTouch(this.gameObject.name, CPPatternManager.me);
+        if (CPTurnDirector.activePlayer != 0)
+        {
+            CPPatternManager.addTouch(this.gameObject.name, CPPatternManager.me);
+        }
     }
     void TouchEnded()
     {
-        StartCoroutine(ColorReset());
-        CPTextUpdater.PrintToPlayer(CPPatternManager.stringedMainPattern(0,true));
-        //PMColorPads.TUPatternManager.UpdateText();
+        ColorReset();
+        if (CPTurnDirector.activePlayer != 0)
+        {
+            CPTextManager.PrintToPlayer(CPPatternManager.stringedMainPattern(0, true));
+        }
     }
     void TouchStay()
     {
-        StartCoroutine(ColorLoop(lerp));
+        ColorLoop(lerp);
     }
     void TouchStopped()
     {
-        StartCoroutine(ColorReset());
+        ColorReset();
     }
 
-    IEnumerator ColorLoop(float t)
+    float ColorLoop(float t)
     {
-
         if (shad.material.color != fancyColor)
         {
             shad.material.color = Color.Lerp(defaultColor, fancyColor, t);
-            yield return lerp += 0.2f;
+            return lerp += 0.3f;
         }
         else
         {
             shad.material.color = defaultColor;
-            yield return lerp = 0f;
+            return lerp = 0f;
         }
     }
-    IEnumerator ColorReset()
+    float ColorReset()
     {
         shad.material.color = defaultColor;
-        yield return lerp = 0f;
+        return lerp = 0f;
     }
 }
 

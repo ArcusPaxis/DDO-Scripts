@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TextUpdater : MonoBehaviour {
+public class TextManager : MonoBehaviour {
 
     private TextMeshProUGUI player1Text, player2Text;
     private TextMeshProUGUI textTimer;

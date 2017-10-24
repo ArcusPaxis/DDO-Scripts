@@ -21,7 +21,7 @@ public class TimeManager : MonoBehaviour
     {
         private float beat;
         private int bpm;
-        public void Beat()
+        public void setBeat()
         {
             
         }

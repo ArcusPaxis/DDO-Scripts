@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class PatternManager : MonoBehaviour {
 
     //declaring the TimeManager script.
-    public TimeManager PMTimeManager;
-    public TextUpdater PMTextUpdater;
+    private TimeManager PMTimeManager;
+    private TextManager PMTextManager;
 
     //The following list will hold the touches made by the players
     public List<PlayerTouch> mainPattern;
@@ -19,7 +19,7 @@ public class PatternManager : MonoBehaviour {
     {
         //instantiating a TimeManager object as tM to access to getTimeStamp()
         PMTimeManager = GameObject.Find("Canvas").GetComponent<TimeManager>();
-        PMTextUpdater = this.GetComponent<TextUpdater>();
+        PMTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();
 
         //initializing the mainPattern list
         mainPattern = new List<PlayerTouch>();
