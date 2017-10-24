@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RhythmManager : MonoBehaviour {
+public class TurnManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
