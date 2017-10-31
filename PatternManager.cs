@@ -65,7 +65,7 @@ public class PatternManager : MonoBehaviour {
     {
         PlayerTouch lastTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
         mainPattern.Add(lastTouch);
-        printMainPattern("last");
+        printMainPattern("all");
     }
     public void printMainPattern( string showMe = "all")
     {

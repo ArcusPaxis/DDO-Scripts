@@ -24,12 +24,14 @@ public class TurnDirector : MonoBehaviour {
 
         touchList = new List<GameObject>();
         TDPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
+
+        StartCoroutine(Turn());
     }
 	
 
 	void Update ()
     {
-        StartCoroutine(Turn());
+        
 	}
 
     IEnumerator Turn()  //This is were the main gameplay happens
@@ -43,13 +45,13 @@ public class TurnDirector : MonoBehaviour {
         Coroutine TouchControl = StartCoroutine(TouchControls()); //Starts TouchControls assynchronously (parallel)
 
         //Repeat Last Steps
-        yield return StartCoroutine(RepeatLastTouches()); //Starts and waits for this routine to end
+        //yield return StartCoroutine(RepeatLastTouches()); //Starts and waits for this routine to end
 
         //Enter new Touch
-        StartCoroutine(EnterNewTouch()); // This 
+        yield return StartCoroutine(EnterNewTouch()); //Starts this coroutine and waits for it to end
 
         //End Turn
-        StopCoroutine(TouchControls());
+        StopCoroutine(TouchControls()); // Stops player being able to input touches.
         turn++;
         yield return null; //Now: turns just end. Future: connect to a new turn.
     }
@@ -70,7 +72,7 @@ public class TurnDirector : MonoBehaviour {
                     touchList.Add(target);
                     if (touch.phase == TouchPhase.Began)
                     {
-                        //TouchDown
+                        //print(target.gameObject.name);
                     }
                     if (touch.phase == TouchPhase.Ended)
                     {
@@ -101,9 +103,10 @@ public class TurnDirector : MonoBehaviour {
     {
         print("RepeatLastTouches started");
 
-        int touchNr = 0;
+        
         if (TDPatternManager.mainPattern.Count != 0)
         {
+            int touchNr = 0;
             for (; touchNr <= TDPatternManager.mainPattern.Count;)
             {
 
@@ -117,8 +120,11 @@ public class TurnDirector : MonoBehaviour {
     IEnumerator EnterNewTouch()
     {
         print("EnterNewTouch started");
-        TDPatternManager.addTouch(TDPatternManager.gameObject.name, TDPatternManager.me);
-        print("EnterNewTouch ended");
-        yield return null;
+        if (Input.touchCount == 1)
+        {
+            TDPatternManager.addTouch(TDPatternManager.gameObject.name, TDPatternManager.me);
+            print("EnterNewTouch ended");
+            yield return null;
+        }
     }
 }
