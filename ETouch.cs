@@ -6,25 +6,26 @@ using UnityEngine;
 public class ETouch : MonoBehaviour {
     public Camera view;
     public LayerMask touchInputMask;
-    private List<GameObject> touchList = new List<GameObject>();
-    private GameObject[] touchesOld;
+    static List<GameObject> touchList = new List<GameObject>();
+    static GameObject[] touchesOld;
     private RaycastHit hit;
 
-    private PatternManager ETPatternManager;
-    private TurnDirector ETTurnDirector;
+    /*private PatternManager ETPatternManager;
+    //private TurnDirector ETTurnDirector;
 
     void Start()
     {
-        ETPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
-        ETTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
-    }
+        //ETPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
+        //ETTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
+    }*/
 
     void Update ()
     {
-        Touching();
 	}
-    private void Touching()
+
+    public IEnumerator Touching()
     {
+        print("Touching coroutine started");
         if (Input.touchCount > 0)
         {
             touchesOld = new GameObject[touchList.Count];
@@ -63,5 +64,6 @@ public class ETouch : MonoBehaviour {
                 }
             }
         }
+        yield return null;
     }
 }

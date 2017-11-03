@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    private float absoluteTime;
-    private float playingTurn;
-    private float betweenTurns;
+    static float absoluteTime, activeTurn, betweenTurns;
+    public float ActiveTurn { get { return activeTurn; } set { activeTurn = value; } }
 
-    void Update()
+    public IEnumerator GameTime()
     {
-        absoluteTime += Time.deltaTime;
+        activeTurn += Time.deltaTime;
+        yield return activeTurn;
     }
 
-    public float GetTimeStamp()
+    public float GetTimeStamp() //this function is called when a touch is made
     {
-        return absoluteTime;
+        return activeTurn;
     }
+
     private class Rhythm //Lets try to keep this class here instead of having a new script
     {
         private float beat;
