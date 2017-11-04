@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class TurnDirector : MonoBehaviour {
 
-    public int activePlayer; //0=nobody, 1=player1, 2=player2.
-    private int turn;
+    private int activePlayer, turn; //0=nobody, 1=player1, 2=player2.
+	
+	//let's see if this works
+	public Touch recentTouch;
 
     //Connecting to PatternManager
     private PatternManager TDPatternManager;
@@ -25,7 +27,6 @@ public class TurnDirector : MonoBehaviour {
         touchList = new List<GameObject>();
         TDPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
     }
-	
 
 	void Update ()
     {
@@ -44,9 +45,6 @@ public class TurnDirector : MonoBehaviour {
 
         //Repeat Last Steps
         yield return StartCoroutine(RepeatLastTouches()); //Starts and waits for this routine to end
-
-        //Enter new Touch
-        StartCoroutine(EnterNewTouch()); // This 
 
         //End Turn
         StopCoroutine(TouchControls());
@@ -99,22 +97,74 @@ public class TurnDirector : MonoBehaviour {
 
     IEnumerator RepeatLastTouches()
     {
-        print("RepeatLastTouches started");
-
-        int touchNr = 0;
-        if (TDPatternManager.mainPattern.Count != 0)
-        {
-            for (; touchNr <= TDPatternManager.mainPattern.Count;)
-            {
-
-            }
-                    //TDPatternManager.addTouch(TDPatternManager.gameObject.name, TDPatternManager.me);
+		print("RepeatLastTouches started");
+		bool success, windowOpen;
+		int touchNr;
+        if (TDPatternManager.mainPattern.Count != 0) 
+        {    //Here we lock the user input while the number of elements in the mainPattern list is greater than the touch number
+	    	success = False;
+			
+			//The next if statement is a rudimentary pseudo-code to get started
+			//the 0.05 will be swapped by a "public float difficulty" variable.
+			/*if (TurnTimer-0.05 <= mainPattern[touchNr].time)
+			{
+				recentTouch.clear();
+				if(TurnTimer+0.05 >= mainPattern[touchNr].time)
+				{
+					//reset recentTouch
+					window = True;
+				}
+			}
+			else
+			{
+				window = False;
+			}
+			if(window)
+			{
+				if(recentTouch.color == TDPatternManager.mainPattern[touchNr].color)
+				{
+					success = True;
+				}
+			}
+			else if (!window && !recentTouch.isEmpty ) //or recentTouch.time != 0
+			{
+				success = False;
+			}
+			*/
+			
+//thinking out loud:
+//I need to compare any touch made (color and time) during a small window of time with what is in mainPattern
+//touchNr could be substituted by a "Touch RecentTouch" class that represents the last touch made by the active player
+//when the window opens, reset the RecentTouch, and an active check can be made to compare the next one until the window closes
+//if successful, the window closes until the next touch's window opens.
+//automatic failure when:
+	//a player touches the wrong color when the window is open
+	//a player touches out of the window-time
+	     
+             /*for (int touchNr = 0; touchNr <= TDPatternManager.mainPattern.Count;)
+             {
+	    
+             }*/
         }
+	else
+	{	//since the mainPattern is empty, jump to coroutine EnterNewTouch
+	     yield return StartCoroutine(EnterNewTouch());
+	}
         print("RepeatLastTouches ended");
-        yield return null;
+	//create a success || failure path
+	/*if(success && touchNr == TDPatternManager.mainPattern.Count)
+	{
+	     print("Success");
+	     yield return StartCoroutine(EnterNewTouch()); 
+	}
+	else
+	{
+	     Print("Failed");
+	     yield return StartCoroutine(GameOver());
+	}*/
     }
 
-    IEnumerator EnterNewTouch()
+    IEnumerator EnterNewTouch() //isolate all other statements adding touches to mainPattern list to check if this works
     {
         print("EnterNewTouch started");
         TDPatternManager.addTouch(TDPatternManager.gameObject.name, TDPatternManager.me);
