@@ -7,8 +7,6 @@ public class ColorPads : MonoBehaviour {
 
     public Color defaultColor, fancyColor;
     private Renderer shad;
-    public float colorSpeed = 60f;
-    private float lerp;
 
     //declaring the access to PatternManager and TextUpdater
     private PatternManager CPPatternManager;
@@ -18,7 +16,6 @@ public class ColorPads : MonoBehaviour {
     void Start()
     { 
         shad = GetComponent<Renderer>();
-        lerp = Time.deltaTime * colorSpeed;
 
         CPPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
         CPTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();

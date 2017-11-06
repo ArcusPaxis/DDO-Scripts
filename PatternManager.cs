@@ -27,7 +27,7 @@ public class PatternManager : MonoBehaviour {
         //instantiating the temporary player
         me = new Player(1, "Andre'", 2);
     }
-
+    
     //The playerTouch class stores touches made by the players and
     //will make up the List<> mainPattern.
     public class PlayerTouch
@@ -57,9 +57,6 @@ public class PatternManager : MonoBehaviour {
             ColorCode = colorCode;
         }
     }
-
-    //Just saving place
-    public void followPattern() { }
 
     public void addTouch(string colorTouched,Player player = null)
     {

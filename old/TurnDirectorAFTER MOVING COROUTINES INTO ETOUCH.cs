@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnDirector : MonoBehaviour {
+public class TurnDirectorAFTER : MonoBehaviour {
     public bool startTurn, endTurn; //used to manually start and end turns
     bool repeatLastTouches, enterNewTouch; //used to check the stage of the turn. Currently not being used
     bool[] justOnce = new bool[5]; //used to make certain events only happen once during the turn
