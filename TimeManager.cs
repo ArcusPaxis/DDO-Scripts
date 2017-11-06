@@ -14,9 +14,7 @@ public class TimeManager : MonoBehaviour
     }
 
     public float GetTimeStamp() //this function is called when a touch is made
-    {
-        return activeTurn;
-    }
+    { return activeTurn; }
 
     private class Rhythm //Lets try to keep this class here instead of having a new script
     {

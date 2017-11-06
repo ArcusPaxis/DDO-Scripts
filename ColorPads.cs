@@ -25,9 +25,7 @@ public class ColorPads : MonoBehaviour {
     void TouchDown()
     {
         if (shad.material.color != fancyColor)
-        {
-            ColorChange();
-        }
+        { ColorChange(); }
 
         if (CPTurnDirector.activePlayer != 0)
         {
@@ -36,32 +34,23 @@ public class ColorPads : MonoBehaviour {
         }
     }
     void TouchEnded()
-    {
-        ColorReset();
-    }
+    { ColorReset(); }
+
     void TouchStay()
     {
         if (shad.material.color != fancyColor)
-        {
-            ColorChange();
-        }
+        { ColorChange(); }
     }
     void TouchStopped()
-    {
-        ColorReset();
-    }
+    { ColorReset(); }
 
     void ColorChange()
-    {
-        shad.material.color = fancyColor;
-    }
+    { shad.material.color = fancyColor; }
 
     void ColorReset()
-    {
-        shad.material.color = defaultColor;
-    }
+    { shad.material.color = defaultColor; }
 
-    /*    float ColorLoop(float t)
+    /*    float ColorLoop(float t) //old blinking function
         {
             if (shad.material.color != fancyColor)
             {

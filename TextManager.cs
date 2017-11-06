@@ -24,9 +24,7 @@ public class TextManager : MonoBehaviour {
 	}
 	
 	void Update ()
-    {
-        textTimer.text = "Timer: " + TUTimeManager.GetTimeStamp().ToString("0.0");
-    }
+    { textTimer.text = "Timer: " + TUTimeManager.GetTimeStamp().ToString("0.0"); }
 
     public void PrintToPlayer(string message, int playerNr = 0)
     {
