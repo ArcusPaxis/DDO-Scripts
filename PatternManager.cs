@@ -8,6 +8,7 @@ public class PatternManager : MonoBehaviour {
     //declaring the TimeManager script.
     private TimeManager PMTimeManager;
     private TextManager PMTextManager;
+    private TurnDirector PMTurnDirector;
 
     //The following list will hold the touches made by the players
     public List<PlayerTouch> mainPattern;
@@ -20,6 +21,7 @@ public class PatternManager : MonoBehaviour {
         //instantiating a TimeManager object as tM to access to getTimeStamp()
         PMTimeManager = GameObject.Find("Canvas").GetComponent<TimeManager>();
         PMTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();
+        PMTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
 
         //initializing the mainPattern list
         mainPattern = new List<PlayerTouch>();
@@ -58,18 +60,44 @@ public class PatternManager : MonoBehaviour {
         }
     }
 
-    public void addTouch(string colorTouched,Player player = null)
+    public void addTouch(string colorTouched, Player player = null)
     {
         PlayerTouch lastTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
         mainPattern.Add(lastTouch);
         printMainPattern("last");
+        if (PMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
+        {
+
+        }
     }
+
+    public bool compareTouch() //LEFT HERE
+    {
+        if (true)
+        {
+            return true;
+        } 
+    }
+
+    public void TouchDown(GameObject targetHit)
+    {
+        if (PMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
+        {
+            addTouch(targetHit.gameObject.name, me);
+            PMTextManager.PrintToPlayer(stringedMainPattern(0, true));
+        }
+        if (PMTurnDirector.GameStep == TurnDirector.GameState.D_Repeat)
+        {
+            compareTouch();
+        }
+    }
+
     public void printMainPattern( string showMe = "all")
     {
         if (showMe.Contains("first"))
         {
             Debug.LogFormat
-               ("Player {0} touched color {1} at {2} seconds",
+               ("Player {0} touched {1} at {2} seconds",
                mainPattern[0].dude.Name,
                mainPattern[0].ColorTouched,
                mainPattern[0].InstantTouched);
@@ -78,7 +106,7 @@ public class PatternManager : MonoBehaviour {
         {
             for (int i = 0; i < mainPattern.Count; i++)
             {
-                Debug.LogFormat("Player {0} touched color {1} at {2} seconds",
+                Debug.LogFormat("Player {0} touched {1} at {2} seconds",
                                 mainPattern[i].dude.Name,
                                 mainPattern[i].ColorTouched,
                                 mainPattern[i].InstantTouched);
@@ -87,7 +115,7 @@ public class PatternManager : MonoBehaviour {
         if (showMe.Contains("last"))
         {
             Debug.LogFormat
-                ("Player {0} touched color {1} at {2} seconds",
+                ("Player {0} touched {1} at {2} seconds",
                 mainPattern[mainPattern.Count-1].dude.Name,
                 mainPattern[mainPattern.Count-1].ColorTouched,
                 mainPattern[mainPattern.Count-1].InstantTouched);
@@ -96,7 +124,7 @@ public class PatternManager : MonoBehaviour {
     public void printMainPattern(int index)
     {
         Debug.LogFormat
-                ("Player {0} touched color {1} at {2} seconds",
+                ("Player {0} touched {1} at {2} seconds",
                 mainPattern[index].dude.Name,
                 mainPattern[index].ColorTouched,
                 mainPattern[index].InstantTouched);
@@ -107,7 +135,7 @@ public class PatternManager : MonoBehaviour {
         {
             return string.Concat(
                 "Player ", mainPattern[mainPattern.Count - 1].dude.Name,
-                " touched color ", mainPattern[mainPattern.Count - 1].ColorTouched,
+                " touched ", mainPattern[mainPattern.Count - 1].ColorTouched,
                 " at ", mainPattern[mainPattern.Count - 1].InstantTouched.ToString("0.0"),
                 " seconds.");
         }
@@ -115,7 +143,7 @@ public class PatternManager : MonoBehaviour {
         {
             return string.Concat(
                 "Player ", mainPattern[index].dude.Name,
-                " touched color ", mainPattern[index].ColorTouched,
+                " touched ", mainPattern[index].ColorTouched,
                 " at ", mainPattern[index].InstantTouched,
                 " seconds.");
         }     

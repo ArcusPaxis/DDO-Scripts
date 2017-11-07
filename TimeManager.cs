@@ -4,13 +4,36 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    static float absoluteTime, activeTurn, betweenTurns;
+    static float activeTurn;
     public float ActiveTurn { get { return activeTurn; } set { activeTurn = value; } }
 
-    public IEnumerator GameTime()
+    TextManager TMTextManager;
+    TurnDirector TMTurnDirector;
+    private void Start()
     {
-        activeTurn += Time.deltaTime;
-        yield return activeTurn;
+        TMTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();
+        TMTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
+    }
+
+    private void FixedUpdate()
+    {
+        GameTime();
+    }
+
+    public void GameTime()
+    {
+        if (TMTurnDirector.GameStep == TurnDirector.GameState.C_TurnStarted ||
+            TMTurnDirector.GameStep == TurnDirector.GameState.D_Repeat ||
+            TMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
+        {
+            print("GameTime on.");
+            activeTurn += Time.deltaTime;
+            TMTextManager.UpdateTimerText(GetTimeStamp());
+        }
+        else if (TMTurnDirector.GameStep == TurnDirector.GameState.G_EndTurn)
+        {
+            activeTurn = 0f;
+        }
     }
 
     public float GetTimeStamp() //this function is called when a touch is made

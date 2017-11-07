@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TurnDirector : MonoBehaviour {
     public bool startTurn, endTurn; //used to manually start and end turns
-    bool repeatLastTouches, enterNewTouch; //used to check the stage of the turn. Currently not being used
 
     public int activePlayer; //0=nobody, 1=player1, 2=player2.
     public float difficulty;
@@ -37,18 +36,17 @@ public class TurnDirector : MonoBehaviour {
 	void Update ()
     {
         if (startTurn)
-        { StartCoroutine(Turn()); }
+        {
+            FuckingTurn(GameStep);
+        }
     }
 
-    public IEnumerator Turn()  //This is were the main gameplay happens
+    public void FuckingTurn (GameState gs)
     {
-        switch (GameStep)
+        switch (gs)
         {
             case GameState.B_PreTurn: //Setting up the turn
-                print("Started turn number " + turn);
-                TDTimeManager.StartCoroutine(TDTimeManager.GameTime());
-                TDTouchControls.StartCoroutine(TDTouchControls.Touching());
-
+                print("Pre turn started");
                 //Making a player active. Using module now to check if player's ID is odd or even.
                 //Could use a bool but this makes implementing more players in the future easier.
                 if (turn % 2 == 1) { activePlayer = 1; }
@@ -56,43 +54,108 @@ public class TurnDirector : MonoBehaviour {
                 GameStep = GameState.C_TurnStarted;
                 break;
             case GameState.C_TurnStarted: //Checking if player has steps to repeat or (1st turn) enter new step.
-                if (TDTouchControls.touchNr != TDPatternManager.mainPattern.Count)
+                print("Started turn number " + turn + " and checking next step.");
+                if (TDPatternManager.mainPattern.Count != 0)
+                {
+                    print("mainPattern not empty. RepeatLastSteps.");
                     GameStep = GameState.D_Repeat;
+                }
                 else
+                {
+                    print("mainPattern is empty. EnterNewStep.");
                     GameStep = GameState.E_EnterNew;
+                }
                 break;
-            /*case GameState.D_Repeat: //Repeat Last Steps
-                yield return TDTouchControls.StartCoroutine(TDTouchControls.RepeatLastTouches()); //Starts and waits for this routine to end
+            case GameState.D_Repeat: //Repeat Last Steps
                 break;
             case GameState.E_EnterNew: //Enter new Touch
-                yield return TDTouchControls.StartCoroutine(TDTouchControls.EnterNewTouch()); //Starts this coroutine and waits for it to end
-                break;*/
+                break;
             case GameState.F_GameOver: //GameOver
-                yield return StartCoroutine(GameOver());
+                GameOver();
                 break;
             case GameState.G_EndTurn:
-                yield return StartCoroutine(EndTurn());
+                EndTurn();
                 break;
         }
     }
-
-    public IEnumerator EndTurn()
+    void EndTurn()
     {
         print("Ended turn number " + turn);
-        TDTouchControls.StopCoroutine(TDTouchControls.Touching()); //Stop Touch Controls
-        TDTimeManager.StopCoroutine(TDTimeManager.GameTime()); // Stop Turn Timer
-        TDTimeManager.ActiveTurn = 0; //resets the turn timer
         TDTouchControls.touchNr = 0;
         startTurn = false;
         endTurn = false;
         GameStep = GameState.B_PreTurn;
-        yield return null;
     }
 
-    public IEnumerator GameOver()
+    void GameOver()
     {
         print("Game Over");
+        TDPatternManager.mainPattern.Clear();
         GameStep = GameState.G_EndTurn;
-        yield return null;
     }
+
+    /*    public void Turn()  //This is were the main gameplay happens
+        {
+            print("coroutine Turn running");
+            switch (GameStep)
+            {
+                case GameState.B_PreTurn: //Setting up the turn
+                    print("Pre turn started");
+                    //TDTimeManager.StartCoroutine(TDTimeManager.GameTime());
+                    //TDTouchControls.StartCoroutine(TDTouchControls.Touching());
+
+                    //Making a player active. Using module now to check if player's ID is odd or even.
+                    //Could use a bool but this makes implementing more players in the future easier.
+                    if (turn % 2 == 1) { activePlayer = 1; }
+                    else if (turn % 2 == 0) { activePlayer = 2; }
+                    GameStep = GameState.C_TurnStarted;
+                    break;
+                case GameState.C_TurnStarted: //Checking if player has steps to repeat or (1st turn) enter new step.
+                    print("Started turn number " + turn + " and checking next step.");
+                    if (TDPatternManager.mainPattern.Count != 0)
+                    {
+                        print("mainPattern not empty. RepeatLastSteps.");
+                        GameStep = GameState.D_Repeat;
+                    }
+                    else
+                    {
+                        print("mainPattern is empty. EnterNewStep.");
+                        GameStep = GameState.E_EnterNew;
+                    }
+                    break;
+                case GameState.D_Repeat: //Repeat Last Steps
+                    //yield return TDTouchControls.StartCoroutine(TDTouchControls.RepeatLastTouches()); //Starts and waits for this routine to end
+                    break;
+                case GameState.E_EnterNew: //Enter new Touch
+                    print("EnterNew coroutine started.");
+                    TDTouchControls.StartCoroutine(TDTouchControls.EnterNewTouch());
+                    break;
+                case GameState.F_GameOver: //GameOver
+                    yield return StartCoroutine(GameOver());
+                    break;
+                case GameState.G_EndTurn:
+                    yield return StartCoroutine(EndTurn());
+                    break;
+            }
+        }
+
+        public IEnumerator EndTurn()
+        {
+            print("Ended turn number " + turn);
+            TDTouchControls.StopCoroutine(TDTouchControls.Touching()); //Stop Touch Controls
+            TDTimeManager.StopCoroutine(TDTimeManager.GameTime()); // Stop Turn Timer
+            TDTimeManager.ActiveTurn = 0; //resets the turn timer
+            TDTouchControls.touchNr = 0;
+            startTurn = false;
+            endTurn = false;
+            GameStep = GameState.B_PreTurn;
+            yield return null;
+        }
+
+        public IEnumerator GameOver()
+        {
+            print("Game Over");
+            GameStep = GameState.G_EndTurn;
+            yield return null;
+        }*/
 }

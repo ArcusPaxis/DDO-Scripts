@@ -10,8 +10,8 @@ public class TextManager : MonoBehaviour {
     private TextMeshProUGUI player1Text, player2Text;
     private TextMeshProUGUI textTimer;
 
-    TimeManager TUTimeManager;
-    PatternManager TUPatternManager;
+    TimeManager TxtMTimeManager;
+    PatternManager TxtMPatternManager;
 
 	void Start ()
     {
@@ -19,12 +19,15 @@ public class TextManager : MonoBehaviour {
         player2Text = GameObject.Find("Player2TextBody").GetComponent<TextMeshProUGUI>();
         textTimer = GameObject.Find("TimerText").GetComponent<TextMeshProUGUI>();
 
-        TUTimeManager = this.GetComponent<TimeManager>();
-        TUPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
+        TxtMTimeManager = this.GetComponent<TimeManager>();
+        TxtMPatternManager = GameObject.Find("DanceFloor").GetComponent<PatternManager>();
 	}
 	
-	void Update ()
-    { textTimer.text = "Timer: " + TUTimeManager.GetTimeStamp().ToString("0.0"); }
+	public void UpdateTimerText ()
+    { textTimer.text = "Timer: " + TxtMTimeManager.GetTimeStamp().ToString("0.0"); }
+
+    public void UpdateTimerText(float time)
+    { textTimer.text = "Timer: " + time.ToString("0.0"); }
 
     public void PrintToPlayer(string message, int playerNr = 0)
     {
