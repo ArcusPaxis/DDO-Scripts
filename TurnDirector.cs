@@ -13,6 +13,8 @@ public class TurnDirector : MonoBehaviour {
     public enum GameState { A_Null, B_PreTurn, C_TurnStarted, D_Repeat, E_EnterNew, F_GameOver, G_EndTurn };
     public GameState GameStep;
 
+    AudioClip HumanMusic;
+
     //Declaring access to other scripts
     private PatternManager TDPatternManager;
     private TouchControls TDTouchControls;
@@ -22,7 +24,7 @@ public class TurnDirector : MonoBehaviour {
     void Start ()
     {
         activePlayer = 0;
-        difficulty = 0.05f;
+        difficulty = 1f;
         turn = 1;
         GameStep = GameState.B_PreTurn;
 
@@ -35,7 +37,7 @@ public class TurnDirector : MonoBehaviour {
 
 	void Update ()
     {
-        if (startTurn)
+        if (startTurn && GameStep != GameState.E_EnterNew)
         {
             FuckingTurn(GameStep);
         }
@@ -46,18 +48,16 @@ public class TurnDirector : MonoBehaviour {
         switch (gs)
         {
             case GameState.B_PreTurn: //Setting up the turn
-                print("Pre turn started");
-                //Making a player active. Using module now to check if player's ID is odd or even.
-                //Could use a bool but this makes implementing more players in the future easier.
                 if (turn % 2 == 1) { activePlayer = 1; }
                 else if (turn % 2 == 0) { activePlayer = 2; }
+                //AudioSource.PlayClipAtPoint(HumanMusic, TDTouchControls.view.transform.position, 1f);
                 GameStep = GameState.C_TurnStarted;
                 break;
             case GameState.C_TurnStarted: //Checking if player has steps to repeat or (1st turn) enter new step.
-                print("Started turn number " + turn + " and checking next step.");
+                print("Turn number " + turn);
                 if (TDPatternManager.mainPattern.Count != 0)
                 {
-                    print("mainPattern not empty. RepeatLastSteps.");
+                    print("RepeatLastSteps.");
                     GameStep = GameState.D_Repeat;
                 }
                 else
@@ -66,11 +66,13 @@ public class TurnDirector : MonoBehaviour {
                     GameStep = GameState.E_EnterNew;
                 }
                 break;
-            case GameState.D_Repeat: //Repeat Last Steps
+            case GameState.D_Repeat:
+                if (TDTimeManager.ActiveTurn >= TDPatternManager.mainPattern[TDTouchControls.touchNr].InstantTouched + difficulty)
+                {
+                    //GameOver();
+                }
                 break;
-            case GameState.E_EnterNew: //Enter new Touch
-                break;
-            case GameState.F_GameOver: //GameOver
+            case GameState.F_GameOver:
                 GameOver();
                 break;
             case GameState.G_EndTurn:
@@ -84,78 +86,20 @@ public class TurnDirector : MonoBehaviour {
         TDTouchControls.touchNr = 0;
         startTurn = false;
         endTurn = false;
+        turn++;
+        TDPatternManager.repeatPattern.Clear();
         GameStep = GameState.B_PreTurn;
     }
 
     void GameOver()
     {
         print("Game Over");
+        turn = 1;
+        TDTouchControls.touchNr = 0;
+        startTurn = false;
+        endTurn = false;
         TDPatternManager.mainPattern.Clear();
-        GameStep = GameState.G_EndTurn;
+        TDPatternManager.repeatPattern.Clear();
+        GameStep = GameState.B_PreTurn;
     }
-
-    /*    public void Turn()  //This is were the main gameplay happens
-        {
-            print("coroutine Turn running");
-            switch (GameStep)
-            {
-                case GameState.B_PreTurn: //Setting up the turn
-                    print("Pre turn started");
-                    //TDTimeManager.StartCoroutine(TDTimeManager.GameTime());
-                    //TDTouchControls.StartCoroutine(TDTouchControls.Touching());
-
-                    //Making a player active. Using module now to check if player's ID is odd or even.
-                    //Could use a bool but this makes implementing more players in the future easier.
-                    if (turn % 2 == 1) { activePlayer = 1; }
-                    else if (turn % 2 == 0) { activePlayer = 2; }
-                    GameStep = GameState.C_TurnStarted;
-                    break;
-                case GameState.C_TurnStarted: //Checking if player has steps to repeat or (1st turn) enter new step.
-                    print("Started turn number " + turn + " and checking next step.");
-                    if (TDPatternManager.mainPattern.Count != 0)
-                    {
-                        print("mainPattern not empty. RepeatLastSteps.");
-                        GameStep = GameState.D_Repeat;
-                    }
-                    else
-                    {
-                        print("mainPattern is empty. EnterNewStep.");
-                        GameStep = GameState.E_EnterNew;
-                    }
-                    break;
-                case GameState.D_Repeat: //Repeat Last Steps
-                    //yield return TDTouchControls.StartCoroutine(TDTouchControls.RepeatLastTouches()); //Starts and waits for this routine to end
-                    break;
-                case GameState.E_EnterNew: //Enter new Touch
-                    print("EnterNew coroutine started.");
-                    TDTouchControls.StartCoroutine(TDTouchControls.EnterNewTouch());
-                    break;
-                case GameState.F_GameOver: //GameOver
-                    yield return StartCoroutine(GameOver());
-                    break;
-                case GameState.G_EndTurn:
-                    yield return StartCoroutine(EndTurn());
-                    break;
-            }
-        }
-
-        public IEnumerator EndTurn()
-        {
-            print("Ended turn number " + turn);
-            TDTouchControls.StopCoroutine(TDTouchControls.Touching()); //Stop Touch Controls
-            TDTimeManager.StopCoroutine(TDTimeManager.GameTime()); // Stop Turn Timer
-            TDTimeManager.ActiveTurn = 0; //resets the turn timer
-            TDTouchControls.touchNr = 0;
-            startTurn = false;
-            endTurn = false;
-            GameStep = GameState.B_PreTurn;
-            yield return null;
-        }
-
-        public IEnumerator GameOver()
-        {
-            print("Game Over");
-            GameStep = GameState.G_EndTurn;
-            yield return null;
-        }*/
 }

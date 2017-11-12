@@ -22,27 +22,18 @@ public class ColorPads : MonoBehaviour {
         CPTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
     }
 
-    void TouchDown(GameObject targetHit)
+    public void TouchDown()
     {
         if (shad.material.color != fancyColor)
         { ColorChange(); }
-
-        if (CPTurnDirector.activePlayer != 0)
-        {
-            CPPatternManager.addTouch(targetHit.gameObject.name, CPPatternManager.me);
-            CPTextManager.PrintToPlayer(CPPatternManager.stringedMainPattern(0, true));
-        }
     }
-    void TouchEnded()
-    { ColorReset(); }
-
+    void TouchEnded() { ColorReset(); }
+    void TouchStopped() { ColorReset(); }
     void TouchStay()
     {
         if (shad.material.color != fancyColor)
         { ColorChange(); }
     }
-    void TouchStopped()
-    { ColorReset(); }
 
     void ColorChange()
     { shad.material.color = fancyColor; }

@@ -26,11 +26,11 @@ public class TimeManager : MonoBehaviour
             TMTurnDirector.GameStep == TurnDirector.GameState.D_Repeat ||
             TMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
         {
-            print("GameTime on.");
             activeTurn += Time.deltaTime;
             TMTextManager.UpdateTimerText(GetTimeStamp());
         }
-        else if (TMTurnDirector.GameStep == TurnDirector.GameState.G_EndTurn)
+        else if (TMTurnDirector.GameStep == TurnDirector.GameState.G_EndTurn ||
+            TMTurnDirector.GameStep == TurnDirector.GameState.F_GameOver)
         {
             activeTurn = 0f;
         }

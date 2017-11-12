@@ -9,9 +9,11 @@ public class PatternManager : MonoBehaviour {
     private TimeManager PMTimeManager;
     private TextManager PMTextManager;
     private TurnDirector PMTurnDirector;
+    private TouchControls PMTouchControls;
 
-    //The following list will hold the touches made by the players
+    //The following lists will hold the touches made by the players
     public List<PlayerTouch> mainPattern;
+    public List<PlayerTouch> repeatPattern;
 
     //declaring a temporary Player
     public Player me;
@@ -22,12 +24,14 @@ public class PatternManager : MonoBehaviour {
         PMTimeManager = GameObject.Find("Canvas").GetComponent<TimeManager>();
         PMTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();
         PMTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
+        PMTouchControls = GameObject.Find("TouchControls").GetComponent<TouchControls>();
 
-        //initializing the mainPattern list
+        //initializing the touches lists
         mainPattern = new List<PlayerTouch>();
+        repeatPattern = new List<PlayerTouch>();
 
         //instantiating the temporary player
-        me = new Player(1, "Andre'", 2);
+        me = new Player(1, "Andre`", 2);
     }
     
     //The playerTouch class stores touches made by the players and
@@ -59,38 +63,73 @@ public class PatternManager : MonoBehaviour {
             ColorCode = colorCode;
         }
     }
-
-    public void addTouch(string colorTouched, Player player = null)
+    /*
+    public void addTouch(int touchNr, string colorTouched, Player player = null)
     {
         PlayerTouch lastTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
-        mainPattern.Add(lastTouch);
+        mainPattern.Insert(touchNr, lastTouch);
+        PMTextManager.PrintToPlayer(stringedMainPattern(0, true));
         printMainPattern("last");
-        if (PMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
-        {
-
-        }
+        PMTurnDirector.GameStep = TurnDirector.GameState.G_EndTurn;
     }
 
-    public bool compareTouch() //LEFT HERE
+    public void compareTouch(int touchNr, string colorTouched, Player player = null)
     {
-        if (true)
+        PlayerTouch rTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
+        repeatPattern.Insert(touchNr, rTouch);
+        //repeatPattern.Add(rTouch);
+        if (repeatPattern[touchNr].ColorTouched == mainPattern[touchNr].ColorTouched &&
+            repeatPattern[touchNr].InstantTouched + PMTurnDirector.difficulty >= mainPattern[touchNr].InstantTouched &&
+            repeatPattern[touchNr].InstantTouched - PMTurnDirector.difficulty <= mainPattern[touchNr].InstantTouched)
         {
-            return true;
+            PMTextManager.PrintToPlayer("Great!");
+            touchNr++;
+        }
+        else
+        {
+            PMTextManager.PrintToPlayer("Fail!");
+            PMTurnDirector.GameStep = TurnDirector.GameState.F_GameOver;
         } 
     }
+    */
+        public void TouchDown(int touchNr, string colorTouched, Player player = null)
+        {
+            if (PMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
+            {
+                PlayerTouch lastTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
+                mainPattern.Add(lastTouch);
+                PMTextManager.PrintToPlayer(stringedMainPattern(0, true));
+                printMainPattern("last");
+                PMTurnDirector.GameStep = TurnDirector.GameState.G_EndTurn;
+            }
 
-    public void TouchDown(GameObject targetHit)
-    {
-        if (PMTurnDirector.GameStep == TurnDirector.GameState.E_EnterNew)
-        {
-            addTouch(targetHit.gameObject.name, me);
-            PMTextManager.PrintToPlayer(stringedMainPattern(0, true));
+            if (PMTurnDirector.GameStep == TurnDirector.GameState.D_Repeat)
+            {
+                PlayerTouch rTouch = new PlayerTouch(me, PMTimeManager.GetTimeStamp(), colorTouched);
+                repeatPattern.Add(rTouch);
+                if (repeatPattern[touchNr].ColorTouched == mainPattern[touchNr].ColorTouched &&
+                    repeatPattern[touchNr].InstantTouched + PMTurnDirector.difficulty >= mainPattern[touchNr].InstantTouched &&
+                    repeatPattern[touchNr].InstantTouched - PMTurnDirector.difficulty <= mainPattern[touchNr].InstantTouched)
+                {
+                    PMTextManager.PrintToPlayer("Great!");
+                    print("touchNr++");
+                    touchNr++;
+                    if (touchNr >= mainPattern.Count)
+                    {
+                        print("touchNr >= mainPattern.Count");
+                        repeatPattern.Clear();
+                        PMTurnDirector.GameStep = TurnDirector.GameState.E_EnterNew;
+                        return;
+                    }
+                }
+                else
+                {
+                    PMTextManager.PrintToPlayer("Fail!");
+                    PMTurnDirector.GameStep = TurnDirector.GameState.F_GameOver;
+                }
+
+            }
         }
-        if (PMTurnDirector.GameStep == TurnDirector.GameState.D_Repeat)
-        {
-            compareTouch();
-        }
-    }
 
     public void printMainPattern( string showMe = "all")
     {
@@ -100,7 +139,7 @@ public class PatternManager : MonoBehaviour {
                ("Player {0} touched {1} at {2} seconds",
                mainPattern[0].dude.Name,
                mainPattern[0].ColorTouched,
-               mainPattern[0].InstantTouched);
+               mainPattern[0].InstantTouched.ToString("0.0"));
         }
         if (showMe.Contains("all"))
         {
@@ -109,16 +148,16 @@ public class PatternManager : MonoBehaviour {
                 Debug.LogFormat("Player {0} touched {1} at {2} seconds",
                                 mainPattern[i].dude.Name,
                                 mainPattern[i].ColorTouched,
-                                mainPattern[i].InstantTouched);
+                                mainPattern[i].InstantTouched.ToString("0.0"));
             }
         }
         if (showMe.Contains("last"))
         {
             Debug.LogFormat
-                ("Player {0} touched {1} at {2} seconds",
-                mainPattern[mainPattern.Count-1].dude.Name,
+                ("Touch nr {0} , {1} at {2} seconds",
+                mainPattern.Count.ToString(),
                 mainPattern[mainPattern.Count-1].ColorTouched,
-                mainPattern[mainPattern.Count-1].InstantTouched);
+                mainPattern[mainPattern.Count-1].InstantTouched.ToString("0.0"));
         }
     }
     public void printMainPattern(int index)
@@ -127,7 +166,7 @@ public class PatternManager : MonoBehaviour {
                 ("Player {0} touched {1} at {2} seconds",
                 mainPattern[index].dude.Name,
                 mainPattern[index].ColorTouched,
-                mainPattern[index].InstantTouched);
+                mainPattern[index].InstantTouched.ToString("0.0"));
     }//overloaded to accept int for specific index selection
     public string stringedMainPattern(int index = 0,bool justLast = false)
     {
@@ -144,7 +183,7 @@ public class PatternManager : MonoBehaviour {
             return string.Concat(
                 "Player ", mainPattern[index].dude.Name,
                 " touched ", mainPattern[index].ColorTouched,
-                " at ", mainPattern[index].InstantTouched,
+                " at ", mainPattern[index].InstantTouched.ToString("0.0"),
                 " seconds.");
         }     
     }
