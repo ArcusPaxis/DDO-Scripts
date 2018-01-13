@@ -5,22 +5,22 @@ using UnityEngine.UI;
 
 public class PatternManager : MonoBehaviour {
 
-    //declaring the TimeManager script.
+    //declaring other scripts so we can access them.
     private TimeManager PMTimeManager;
     private TextManager PMTextManager;
     private TurnDirector PMTurnDirector;
     private TouchControls PMTouchControls;
 
-    //The following lists will hold the touches made by the players
+    //The following lists will hold the touches made by the players.
     public List<PlayerTouch> mainPattern;
     public List<PlayerTouch> repeatPattern;
 
-    //declaring a temporary Player
+    //declaring a temporary Player for debugging.
     public Player me;
 
     void Start()
     {
-        //instantiating a TimeManager object as tM to access to getTimeStamp()
+        //instantiating other scripts to access them.
         PMTimeManager = GameObject.Find("Canvas").GetComponent<TimeManager>();
         PMTextManager = GameObject.Find("Canvas").GetComponent<TextManager>();
         PMTurnDirector = GameObject.Find("TurnDirector").GetComponent<TurnDirector>();
